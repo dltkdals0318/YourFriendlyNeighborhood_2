@@ -80,13 +80,19 @@
             font-size: 14px;
             white-space: nowrap;
         }
+        
+        #back_image{
+            align-items: center;
+            z-index: -1;
+            margin-bottom: 2vh;
+        }
     </style>
 </head>
 <body>
     <h1 id="title">YourFriendlyNeighborhood</h1>
     <p id="text">- - -<br><br>전시를 위해 방문해준 인공지능 Ava에게 코멘트를 남겨보자.</p>
     <div id="commentContainer"></div>
-
+    <img src="monitor.png" id="back_image" height="200px">
     <div id="inputContainer">
         <input type="text" id="commentInput" placeholder="댓글을 입력하세요">
         
