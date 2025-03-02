@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #text{
+            font-size: 11px;
+            margin-bottom: 4vh;
+            text-align: center;
+        }
+
+        #title {
+            display: inline-block;
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 1vh;
+        }
+
+        /* 각 글자에 적용할 flicker 애니메이션 */
+        .letter {
+            display: inline-block;
+            -webkit-text-stroke: 1px black;
+            -webkit-text-fill-color: rgb(45, 45, 45);
+            animation: flickerOutline 4s infinite steps(1, end);
+        }
+
+        @keyframes flickerOutline {
+            0% { -webkit-text-fill-color: rgb(45, 45, 45); }
+            50% { -webkit-text-fill-color: transparent; }
+            100% { -webkit-text-fill-color: rgb(45, 45, 45); }
+        }
+
+        #commentContainer {
+        width: 95vw;
+        height: 70vh;
+        position: relative;
+        overflow: hidden;
+        background-color: white;
+        border: 1px solid rgb(227, 227, 227);
+        margin-bottom: 3vh;
+        }
+
+        #inputContainer {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 5px;
+        }
+
+        #commentInput {
+            width: 300px;
+            padding: 5px;
+            border: 1px solid black;
+            font-size: 13px;
+        }
+
+        #submitButton {
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .comment {
+            position: absolute;
+            color: blue;
+            text-decoration: underline;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">YourFriendlyNeighborhood</h1>
+    <p id="text">- - -<br><br>전시를 위해 방문해준 인공지능 Ava에게 코멘트를 남겨보자.</p>
+    <div id="commentContainer"></div>
+
+    <div id="inputContainer">
+        <input type="text" id="commentInput" placeholder="댓글을 입력하세요">
+        
+        <button id="submitButton">입력</button>
+    </div>
+
+    <script>
+        function getRandomPosition(comment) {
+            const container = document.getElementById("commentContainer");
+            const maxX = container.clientWidth - comment.offsetWidth - 10;
+            const maxY = container.clientHeight - comment.offsetHeight - 10;
+
+            const x = Math.max(10, Math.random() * maxX);
+            const y = Math.max(10, Math.random() * maxY);
+
+            return { x, y };
+        }
+
+        function moveComment(comment) {
+            const newPosition = getRandomPosition(comment);
+            comment.style.left = `${newPosition.x}px`;
+            comment.style.top = `${newPosition.y}px`;
+        }
+
+        function addComment() {
+            const commentText = document.getElementById("commentInput").value.trim();
+            if (commentText === "") return;
+
+            const comment = document.createElement("div");
+            comment.classList.add("comment");
+            comment.textContent = commentText;
+
+            const container = document.getElementById("commentContainer");
+            container.appendChild(comment);
+
+            // 초기 랜덤 위치 설정
+            setTimeout(() => moveComment(comment), 10);
+
+            // 4초마다 랜덤 위치 변경
+            setInterval(() => moveComment(comment), 4000);
+
+            // 입력 필드 초기화
+            document.getElementById("commentInput").value = "";
+        }
+
+        document.getElementById("submitButton").addEventListener("click", addComment);
+        document.getElementById("commentInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                addComment();
+            }
+        });
+
+        // 🎯 제목 애니메이션 적용
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleEl = document.getElementById('title');
+            const text = titleEl.textContent;
+            titleEl.textContent = '';
+
+            for (let i = 0; i < text.length; i++) {
+                const span = document.createElement('span');
+                span.className = 'letter';
+                const delay = Math.random();
+                span.style.animationDelay = `${delay}s`;
+                const duration = 2 + Math.random();
+                span.style.animationDuration = `${duration}s`;
+                span.textContent = text[i];
+                titleEl.appendChild(span);
+            }
+        });
+    </script>
+
+</body>
+</html>
